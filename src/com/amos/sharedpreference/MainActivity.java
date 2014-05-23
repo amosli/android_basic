@@ -1,5 +1,7 @@
 package com.amos.sharedpreference;
 
+import java.io.FileNotFoundException;
+
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -36,7 +38,12 @@ public class MainActivity extends Activity implements OnClickListener {
 			et_name.setText(sharedPreference.getString("name", ""));
 			et_password.setText(sharedPreference.getString("password", ""));
 		}
-		
+		//使用 openFileInput读取数据
+//		try {
+//			this.openFileInput("/data/data/config.txt");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		
 		// 注册监听事件
 		bt_login.setOnClickListener(this);
