@@ -2,6 +2,7 @@ package com.amos.xml.service;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.util.Log;
 import android.util.Xml;
 import com.amos.xml.domain.Person;
 import org.xmlpull.v1.XmlPullParser;
@@ -15,7 +16,6 @@ import java.util.List;
  */
 public class PersonService {
     private Context context;
-
     public PersonService(Context context) {
         this.context = context;
     }
@@ -27,11 +27,13 @@ public class PersonService {
      * @return
      */
     public List<Person> getPersons(String filename) {
+
         AssetManager manager = context.getAssets();
-        List<Person> persons = new ArrayList<Person>();
+        //初始化项目.
+      List<Person> persons = null;
+        Person person = null;
 
         try {
-            Person person = null;
             InputStream inputStream = manager.open(filename);
             //在android下使用xmlpullparser进行解析
             XmlPullParser xmlPullParser = Xml.newPullParser();
@@ -41,34 +43,46 @@ public class PersonService {
             //获取pull解析器对应事件类型
             int eventType = xmlPullParser.getEventType();
             while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType) {
+                    case XmlPullParser.START_DOCUMENT:
+                        persons = new ArrayList<Person>();
+                        break;
 
-                if (eventType == XmlPullParser.START_TAG) {
-                    if (xmlPullParser.getName().equals("person")) {
-                        person = new Person();
-                        //获取id对应的属性的值
-                        String id = xmlPullParser.getAttributeValue(0);
-                        person.setId(Integer.valueOf(id));
-                    }else if(xmlPullParser.getName().equals("name")) {
-                        person.setName(xmlPullParser.nextText());
-                    }else if(xmlPullParser.getName().equals("age")) {
-                        person.setAge(Integer.parseInt(xmlPullParser.nextText()));
-                    }
+                    case XmlPullParser.START_TAG:
+                        if (xmlPullParser.getName().equals("person")) {
+                            person = new Person();
+                            String id = xmlPullParser.getAttributeValue(0);
+                            Log.d("person.id", id);
+                            person.setId(Integer.parseInt(id));
+                            eventType = xmlPullParser.next();
+                        } else if (xmlPullParser.getName().equals("name")) {
+                            String name = xmlPullParser.nextText();
+                            Log.d("person.name", name);
+                            person.setName(name);
+                            eventType = xmlPullParser.next();
+                        } else if (xmlPullParser.getName().equals("age")) {
+                            String age = xmlPullParser.nextText();
+                            Log.d("person.age", age);
+                            person.setAge(Integer.valueOf(age));
+                            eventType = xmlPullParser.next();
+                        }
+                        ;
+                        break;
+                    case XmlPullParser.END_TAG:
+                        if (xmlPullParser.getName().equals("person")) {
+                            persons.add(person);
+                            person = null;
+                        }
 
+                        break;
                 }
-
-                if (eventType == XmlPullParser.END_TAG) {
-                    persons.add(person);
-                }
-
                 eventType = xmlPullParser.next();
-
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return persons;
-    }
 
+    }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by amosli on 14-6-3.
  */
-public class TestPersonService extends AndroidTestCase {
+public class TestService extends AndroidTestCase {
 
     public void testGetPersons() throws Exception {
         PersonService personService = new PersonService(getContext());
@@ -18,4 +18,16 @@ public class TestPersonService extends AndroidTestCase {
             System.out.println(person.getName());
         }
     }
+//    public void testBook() throws Exception {
+//        InputStream is = getContext().getAssets().open("books.xml");
+////                  parser = new SaxBookParser();
+////                  parser = new DomBookParser();
+//        PullBookParser parser = new PullBookParser();
+//        List<Book> books = parser.parse(is);
+//        for (Book book : books) {
+//            Log.i("test", book.toString());
+//        }
+//    }
+
+
 }
