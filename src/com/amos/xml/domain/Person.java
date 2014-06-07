@@ -5,9 +5,18 @@ package com.amos.xml.domain;
  */
 
 public class Person {
+    private Integer id;
     private String name;
     private Integer age;
-    private Integer id;
+
+    public Person() {
+    }
+
+    public Person( Integer id,String name, Integer age) {
+        this.name = name;
+        this.age = age;
+        this.id = id;
+    }
 
     public Integer getAge() {
         return age;

@@ -2,11 +2,15 @@ package com.amos.xml.service;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Environment;
 import android.util.Log;
 import android.util.Xml;
 import com.amos.xml.domain.Person;
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlSerializer;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,4 +89,55 @@ public class PersonService {
         return persons;
 
     }
+
+
+    /**
+     * 生成xml文件
+     * @param personList
+     * @return
+     */
+    public boolean saveToXML(List<Person> personList){
+        XmlSerializer xmlSerializer = Xml.newSerializer();
+        File file = new File(Environment.getExternalStorageDirectory(), "created_person.xml");
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            xmlSerializer.setOutput(fileOutputStream,"utf-8");
+            //文档的开头
+            xmlSerializer.startDocument("utf-8",true);
+            xmlSerializer.startTag(null,"persons");
+            for(Person person:personList){
+                //person
+
+                //startTag第一参数是命名空间
+                xmlSerializer.startTag(null,"person");
+                xmlSerializer.attribute(null,"id",person.getId()+"");
+
+                //name
+                xmlSerializer.startTag(null,"name");
+                xmlSerializer.text(person.getName());
+                xmlSerializer.endTag(null,"name");
+
+                //age
+                xmlSerializer.startTag(null,"age");
+                xmlSerializer.text(person.getAge()+"");
+                xmlSerializer.endTag(null,"age");
+
+                xmlSerializer.endTag(null,"person");
+            }
+
+            //文档的末尾
+            xmlSerializer.endDocument();
+            fileOutputStream.flush();
+            fileOutputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+
+    }
+
+
+
 }
