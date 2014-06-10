@@ -26,7 +26,7 @@ public class MyDBHelper extends SQLiteOpenHelper{
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d(tag,"onCreate.....");
+        Log.d(tag, "onCreate.....");
         //创建一个数据库
         db.execSQL("create table person (personid integer primary key autoincrement ,name varchar(30) )");
 
@@ -45,4 +45,6 @@ public class MyDBHelper extends SQLiteOpenHelper{
         db.execSQL("alter table person add phone varchar(13) null");
 
     }
+
+
 }

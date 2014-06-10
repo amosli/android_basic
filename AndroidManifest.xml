@@ -3,8 +3,11 @@
           package="com.amos.android_database"
           android:versionCode="1"
           android:versionName="1.0">
+    <instrumentation android:name="android.test.InstrumentationTestRunner"
+                     android:targetPackage="com.amos.android_database"/>
     <uses-sdk android:minSdkVersion="7"/>
     <application android:label="@string/app_name">
+        <uses-library android:name="android.test.runner"/>
         <activity android:name="MyActivity"
                   android:label="@string/app_name">
             <intent-filter>
