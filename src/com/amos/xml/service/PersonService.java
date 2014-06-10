@@ -2,7 +2,6 @@ package com.amos.xml.service;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.os.Environment;
 import android.util.Log;
 import android.util.Xml;
 import com.amos.xml.domain.Person;
@@ -20,6 +19,7 @@ import java.util.List;
  */
 public class PersonService {
     private Context context;
+
     public PersonService(Context context) {
         this.context = context;
     }
@@ -34,7 +34,7 @@ public class PersonService {
 
         AssetManager manager = context.getAssets();
         //初始化项目.
-      List<Person> persons = null;
+        List<Person> persons = null;
         Person person = null;
 
         try {
@@ -93,10 +93,11 @@ public class PersonService {
 
     /**
      * 生成xml文件
+     *
      * @param personList
      * @return
      */
-    public boolean saveToXML(List<Person> personList){
+    public boolean saveToXML(List<Person> personList) {
         XmlSerializer xmlSerializer = Xml.newSerializer();
 //        File file = new File(Environment.getDownloadCacheDirectory(), "created_person.xml");
 
@@ -104,45 +105,44 @@ public class PersonService {
 
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
-            xmlSerializer.setOutput(fileOutputStream,"utf-8");
+            xmlSerializer.setOutput(fileOutputStream, "utf-8");
             //文档的开头
-            xmlSerializer.startDocument("utf-8",true);
-            Log.d("准备开始数据了!","111");
-            xmlSerializer.startTag(null,"persons");
-            for(Person person:personList){
+            xmlSerializer.startDocument("utf-8", true);
+            Log.d("准备开始数据了!", "111");
+            xmlSerializer.startTag(null, "persons");
+            for (Person person : personList) {
                 //person
 
                 //startTag第一参数是命名空间
-                xmlSerializer.startTag(null,"person");
-                xmlSerializer.attribute(null,"id",person.getId()+"");
+                xmlSerializer.startTag(null, "person");
+                xmlSerializer.attribute(null, "id", person.getId() + "");
 
                 //name
-                xmlSerializer.startTag(null,"name");
+                xmlSerializer.startTag(null, "name");
                 xmlSerializer.text(person.getName());
-                xmlSerializer.endTag(null,"name");
+                xmlSerializer.endTag(null, "name");
 
                 //age
-                xmlSerializer.startTag(null,"age");
-                xmlSerializer.text(person.getAge()+"");
-                xmlSerializer.endTag(null,"age");
+                xmlSerializer.startTag(null, "age");
+                xmlSerializer.text(person.getAge() + "");
+                xmlSerializer.endTag(null, "age");
 
-                xmlSerializer.endTag(null,"person");
+                xmlSerializer.endTag(null, "person");
             }
-            Log.d("结束写数据了!","111");
+            Log.d("结束写数据了!", "111");
             //文档的末尾
             xmlSerializer.endDocument();
             fileOutputStream.flush();
             fileOutputStream.close();
         } catch (Exception e) {
-            Log.d("出错了!","111");
+            Log.d("出错了!", "111");
             e.printStackTrace();
             return false;
         }
-        Log.d("成功!","111");
+        Log.d("成功!", "111");
         return true;
 
     }
-
 
 
 }
