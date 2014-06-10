@@ -47,6 +47,7 @@ public class TestService extends AndroidTestCase {
         PersonService personService = new PersonService(getContext());
         boolean result = personService.saveToXML(persons);
         System.out.println("result:"+result);
+        assertEquals(true,result);
 
 
     }

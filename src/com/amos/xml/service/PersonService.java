@@ -98,12 +98,16 @@ public class PersonService {
      */
     public boolean saveToXML(List<Person> personList){
         XmlSerializer xmlSerializer = Xml.newSerializer();
-        File file = new File(Environment.getExternalStorageDirectory(), "created_person.xml");
+//        File file = new File(Environment.getDownloadCacheDirectory(), "created_person.xml");
+
+        File file = new File("/mnt/person.xml");
+
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             xmlSerializer.setOutput(fileOutputStream,"utf-8");
             //文档的开头
             xmlSerializer.startDocument("utf-8",true);
+            Log.d("准备开始数据了!","111");
             xmlSerializer.startTag(null,"persons");
             for(Person person:personList){
                 //person
@@ -124,16 +128,17 @@ public class PersonService {
 
                 xmlSerializer.endTag(null,"person");
             }
-
+            Log.d("结束写数据了!","111");
             //文档的末尾
             xmlSerializer.endDocument();
             fileOutputStream.flush();
             fileOutputStream.close();
         } catch (Exception e) {
+            Log.d("出错了!","111");
             e.printStackTrace();
             return false;
         }
-
+        Log.d("成功!","111");
         return true;
 
     }
