@@ -102,5 +102,33 @@ public class PersonDao {
      }
 
 
+    public void transferMoney() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        if(db.isOpen()){
+            try{
 
+                db.beginTransaction();
+
+                //给amos1账户里设置1000元,amost account=0;
+                db.execSQL("update person  set account=?  where name = ?",new Object[]{1000,"amos1"});
+                db.execSQL("update person  set account=?  where name = ?",new Object[]{0,"amos2"});
+
+                //从amos1账户里扣除200元
+                db.execSQL("update person  set account=account-?  where name = ?",new Object[]{200,"amos1"});
+                //把amos1的钱转给amos2
+                db.execSQL("update person set account=account+? where name=?",new Object[]{200,"amos2"});
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }finally{
+                //显示的设置数据事务是否成功
+                db.setTransactionSuccessful();
+                db.endTransaction();
+
+                db.close();
+            }
+        }
+
+
+    }
 }

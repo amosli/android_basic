@@ -43,5 +43,11 @@ public class TestPersonDao extends AndroidTestCase{
 
         }
 
+        public void testTransaction() throws Exception{
+            PersonDao personDao = new PersonDao(getContext());
+            personDao.transferMoney();
+        }
+
+
 
 }

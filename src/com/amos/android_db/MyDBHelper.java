@@ -13,7 +13,7 @@ public class MyDBHelper extends SQLiteOpenHelper{
      * @param context
      */
     public MyDBHelper(Context context) {
-        super(context, "sqlitedb", null, 1);
+        super(context, "sqlitedb", null, 2);
     }
 
     /**
@@ -27,6 +27,6 @@ public class MyDBHelper extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL("alter table person add account integer null");
     }
 }
