@@ -7,9 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 /**
  * Created by amosli on 14-6-12.
  */
-public class MyDBHelper extends SQLiteOpenHelper{
+public class MyDBHelper extends SQLiteOpenHelper {
     /**
-     *
      * @param context
      */
     public MyDBHelper(Context context) {
@@ -18,6 +17,7 @@ public class MyDBHelper extends SQLiteOpenHelper{
 
     /**
      * 数据库第一次创建的时候调用此方法
+     *
      * @param db
      */
     @Override

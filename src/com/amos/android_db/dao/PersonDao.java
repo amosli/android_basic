@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import com.amos.android_db.MyDBHelper;
 
 import java.util.ArrayList;
@@ -14,8 +13,8 @@ import java.util.List;
  * Created by amosli on 14-6-12.
  */
 public class PersonDao {
-    private Context context;
     MyDBHelper dbHelper;
+    private Context context;
 
     public PersonDao(Context context) {
         this.context = context;
@@ -78,49 +77,49 @@ public class PersonDao {
             cursor.close();
             db.close();
         }
-            return status_result;
+        return status_result;
+    }
+
+    public List<Person> findAll() {
+        List<Person> persons = null;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        if (db.isOpen()) {
+            persons = new ArrayList<Person>();
+
+            Cursor cursor = db.query("person", null, null, null, null, null, null);
+
+            while (cursor.moveToNext()) {
+                Person person = new Person();
+                person.setName(cursor.getString(cursor.getColumnIndex("name")));
+                person.setAge(cursor.getInt(cursor.getColumnIndex("age")));
+                persons.add(person);
+            }
+            cursor.close();
+            db.close();
         }
-
-     public List<Person> findAll(){
-         List<Person> persons = null;
-         SQLiteDatabase db = dbHelper.getReadableDatabase();
-         if(db.isOpen()){
-             persons = new ArrayList<Person>();
-
-             Cursor cursor = db.query("person", null, null, null, null, null, null);
-
-             while(cursor.moveToNext()){
-                 Person person = new Person();
-                 person.setName(cursor.getString(cursor.getColumnIndex("name")));
-                 person.setAge(cursor.getInt(cursor.getColumnIndex("age")));
-                 persons.add(person);
-              }
-             cursor.close();
-             db.close();
-         }
-         return persons;
-     }
+        return persons;
+    }
 
 
     public void transferMoney() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        if(db.isOpen()){
-            try{
+        if (db.isOpen()) {
+            try {
 
                 db.beginTransaction();
 
                 //给amos1账户里设置1000元,amost account=0;
-                db.execSQL("update person  set account=?  where name = ?",new Object[]{1000,"amos1"});
-                db.execSQL("update person  set account=?  where name = ?",new Object[]{0,"amos2"});
+                db.execSQL("update person  set account=?  where name = ?", new Object[]{1000, "amos1"});
+                db.execSQL("update person  set account=?  where name = ?", new Object[]{0, "amos2"});
 
                 //从amos1账户里扣除200元
-                db.execSQL("update person  set account=account-?  where name = ?",new Object[]{200,"amos1"});
+                db.execSQL("update person  set account=account-?  where name = ?", new Object[]{200, "amos1"});
                 //把amos1的钱转给amos2
-                db.execSQL("update person set account=account+? where name=?",new Object[]{200,"amos2"});
+                db.execSQL("update person set account=account+? where name=?", new Object[]{200, "amos2"});
 
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
-            }finally{
+            } finally {
                 //显示的设置数据事务是否成功
                 db.setTransactionSuccessful();
                 db.endTransaction();

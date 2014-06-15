@@ -10,14 +10,17 @@ import android.widget.*;
 import com.amos.android_db.dao.Person;
 import com.amos.android_db.dao.PersonDao;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MyActivity extends Activity {
 
+    LayoutInflater inflater;//打气筒
+    String tag = "MyActivity.class";
     private ListView personListView;
     private List<Person> persons;
-    LayoutInflater inflater;//打气筒
-    String tag="MyActivity.class";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,7 +36,19 @@ public class MyActivity extends Activity {
         //第一步,得到组件的id的引用
         personListView = (ListView) this.findViewById(R.id.listview_show_data);
         //第二步,设置组件要显示的内容,listview要显示的内容比较复杂,需要数据的适配器
-        personListView.setAdapter(new MyListAdapter());
+
+//      personListView.setAdapter(new MyListAdapter());//自实现BaseAdapter
+
+
+        List<Map<String, String>> data = new ArrayList<Map<String, String>>();
+        for (Person p : persons) {
+            Map<String, String> datavalue = new HashMap<String, String>();
+            datavalue.put("name", p.getName());
+            datavalue.put("age", p.getAge().toString());
+            data.add(datavalue);
+        }
+
+        personListView.setAdapter(new SimpleAdapter(this, data, R.layout.item, new String[]{"name", "age"}, new int[]{R.id.tv_name, R.id.tv_age}));
 
         //注册点击事件
         personListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -46,22 +61,22 @@ public class MyActivity extends Activity {
              */
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(tag,"点击了!");
+                Log.d(tag, "点击了!");
                 /*
                 方法 1:
                  */
                 TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
-                Toast.makeText(MyActivity.this,"姓名是1:"+tv_name.getText(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(MyActivity.this, "姓名是1:" + tv_name.getText(), Toast.LENGTH_SHORT).show();
                 /*
                 方法 2:
                  */
                 String name = persons.get(position).getName();
-                Toast.makeText(MyActivity.this,"姓名是2:"+name,Toast.LENGTH_SHORT).show();
+                Toast.makeText(MyActivity.this, "姓名是2:" + name, Toast.LENGTH_SHORT).show();
                 /*
                 方法 3:
                  */
-                Person p=(Person)parent.getItemAtPosition(position);
-                Toast.makeText(MyActivity.this,"姓名是3:"+p.getName(),Toast.LENGTH_SHORT).show();
+                Person p = (Person) parent.getItemAtPosition(position);
+                Toast.makeText(MyActivity.this, "姓名是3:" + p.getName(), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -72,6 +87,7 @@ public class MyActivity extends Activity {
 
         /**
          * 返回当前有多少个条目
+         *
          * @return
          */
 
@@ -82,6 +98,7 @@ public class MyActivity extends Activity {
 
         /**
          * 返回当前position位置对应的条目的object对象
+         *
          * @param position
          * @return
          */
@@ -92,6 +109,7 @@ public class MyActivity extends Activity {
 
         /**
          * 返回当前position位置对应条目的id
+         *
          * @param position
          * @return
          */
@@ -127,7 +145,7 @@ public class MyActivity extends Activity {
             TextView tv_age = (TextView) view.findViewById(R.id.tv_age);
             tv_name.setText("姓名:" + person.getName());
             tv_age.setText("年龄:" + person.getAge());
-            Log.d("item:",""+position);
+            Log.d("item:", "" + position);
             return view;
         }
     }
