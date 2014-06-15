@@ -14,9 +14,7 @@ public class TestPersonDao extends AndroidTestCase{
 
         public void testAdd() throws Exception{
             PersonDao personDao = new PersonDao(this.getContext());
-            personDao.add("amosli",10);
-            personDao.add("amosli",10);
-            for(int i=0;i<10;i++){
+            for(int i=10;i<100;i++){
                 personDao.add("amos"+i,10+i);
             }
 
