@@ -6,9 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import com.amos.android_db.dao.Person;
 import com.amos.android_db.dao.PersonDao;
 
@@ -19,6 +17,7 @@ public class MyActivity extends Activity {
     private ListView personListView;
     private List<Person> persons;
     LayoutInflater inflater;//打气筒
+    String tag="MyActivity.class";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,6 +34,37 @@ public class MyActivity extends Activity {
         personListView = (ListView) this.findViewById(R.id.listview_show_data);
         //第二步,设置组件要显示的内容,listview要显示的内容比较复杂,需要数据的适配器
         personListView.setAdapter(new MyListAdapter());
+
+        //注册点击事件
+        personListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            /**
+             *
+             * @param parent 当前ListView
+             * @param view 代表当前被点击的条目
+             * @param position 当前条目的位置
+             * @param id 当前被点击的条目的id
+             */
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(tag,"点击了!");
+                /*
+                方法 1:
+                 */
+                TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
+                Toast.makeText(MyActivity.this,"姓名是1:"+tv_name.getText(),Toast.LENGTH_SHORT).show();
+                /*
+                方法 2:
+                 */
+                String name = persons.get(position).getName();
+                Toast.makeText(MyActivity.this,"姓名是2:"+name,Toast.LENGTH_SHORT).show();
+                /*
+                方法 3:
+                 */
+                Person p=(Person)parent.getItemAtPosition(position);
+                Toast.makeText(MyActivity.this,"姓名是3:"+p.getName(),Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
     }
 
