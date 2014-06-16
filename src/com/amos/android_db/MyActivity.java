@@ -1,6 +1,7 @@
 package com.amos.android_db;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,13 +55,20 @@ public class MyActivity extends Activity {
         //3)arrayAdapter
 //      public  ArrayAdapter(android.content.Context context, int resource, int textViewResourceId, T[] objects) { throw new RuntimeException("Stub!"); }
 
-        String[] personArray = new String[persons.size()];
-        for(int i=0;i<persons.size();i++){
-            personArray[i] = persons.get(i).getName();
-        }
+//        String[] personArray = new String[persons.size()];
+//        for(int i=0;i<persons.size();i++){
+//            personArray[i] = persons.get(i).getName();
+//        }
+//
+//
+//        personListView.setAdapter(new ArrayAdapter(this,R.layout.item,R.id.tv_name,personArray));
+
+        //4)simpleCursorAdapter
+        //要求数据的组件名称以下划线
+        Cursor cursor = personDao.findAllByCursor() ;
+        personListView.setAdapter(new SimpleCursorAdapter(this,R.layout.item,cursor,new String[]{"name","age"},new int[]{R.id.tv_name,R.id.tv_age}));
 
 
-        personListView.setAdapter(new ArrayAdapter(this,R.layout.item,R.id.tv_name,personArray));
 
 
         //注册点击事件

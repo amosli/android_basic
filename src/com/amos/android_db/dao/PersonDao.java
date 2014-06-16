@@ -79,6 +79,18 @@ public class PersonDao {
         }
         return status_result;
     }
+    public Cursor findAllByCursor(){
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor=null;
+        if (db.isOpen()) {
+            cursor = db.query("person", null, null, null, null, null, null);
+//            cursor=  db.rawQuery("select personid as _id,name,age from person",null);
+
+        }
+
+            return cursor;
+    }
+
 
     public List<Person> findAll() {
         List<Person> persons = null;
