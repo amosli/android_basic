@@ -75,8 +75,8 @@ public class MyActivity extends Activity {
                 /*
                 方法 3:
                  */
-                Person p = (Person) parent.getItemAtPosition(position);
-                Toast.makeText(MyActivity.this, "姓名是3:" + p.getName(), Toast.LENGTH_SHORT).show();
+                /*Person p = (Person) parent.getItemAtPosition(position);
+                Toast.makeText(MyActivity.this, "姓名是3:" + p.getName(), Toast.LENGTH_SHORT).show();*/
 
             }
         });
