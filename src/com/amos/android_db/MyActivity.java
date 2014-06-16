@@ -36,19 +36,32 @@ public class MyActivity extends Activity {
         //第一步,得到组件的id的引用
         personListView = (ListView) this.findViewById(R.id.listview_show_data);
         //第二步,设置组件要显示的内容,listview要显示的内容比较复杂,需要数据的适配器
-
+        //1)自定义适配器
 //      personListView.setAdapter(new MyListAdapter());//自实现BaseAdapter
 
+        //2)SimpleAdapter
 
-        List<Map<String, String>> data = new ArrayList<Map<String, String>>();
-        for (Person p : persons) {
-            Map<String, String> datavalue = new HashMap<String, String>();
-            datavalue.put("name", p.getName());
-            datavalue.put("age", p.getAge().toString());
-            data.add(datavalue);
+//        List<Map<String, String>> data = new ArrayList<Map<String, String>>();
+//        for (Person p : persons) {
+//            Map<String, String> datavalue = new HashMap<String, String>();
+//            datavalue.put("name", p.getName());
+//            datavalue.put("age", p.getAge().toString());
+//            data.add(datavalue);
+//        }
+//
+//        personListView.setAdapter(new SimpleAdapter(this, data, R.layout.item, new String[]{"name", "age"}, new int[]{R.id.tv_name, R.id.tv_age}));
+
+        //3)arrayAdapter
+//      public  ArrayAdapter(android.content.Context context, int resource, int textViewResourceId, T[] objects) { throw new RuntimeException("Stub!"); }
+
+        String[] personArray = new String[persons.size()];
+        for(int i=0;i<persons.size();i++){
+            personArray[i] = persons.get(i).getName();
         }
 
-        personListView.setAdapter(new SimpleAdapter(this, data, R.layout.item, new String[]{"name", "age"}, new int[]{R.id.tv_name, R.id.tv_age}));
+
+        personListView.setAdapter(new ArrayAdapter(this,R.layout.item,R.id.tv_name,personArray));
+
 
         //注册点击事件
         personListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
