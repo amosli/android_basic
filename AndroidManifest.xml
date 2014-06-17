@@ -4,7 +4,7 @@
           android:versionCode="1"
           android:versionName="1.0">
     <instrumentation android:name="android.test.InstrumentationTestRunner"
-                     android:targetPackage="com.amos.android_db"/>
+                     android:targetPackage="com.amos.android_db"></instrumentation>
     <uses-sdk android:minSdkVersion="7"/>
     <application android:label="@string/app_name">
         <uses-library android:name="android.test.runner"/>
@@ -15,5 +15,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!--给内容提供者提供定义一个uri,一般建议使用包名+类名,以供其它程序调用 -->
+        <provider android:authorities="com.amos.android_db.provider.PersonProvider" android:name=".provider.PersonProvider">
+
+        </provider>
     </application>
 </manifest> 
