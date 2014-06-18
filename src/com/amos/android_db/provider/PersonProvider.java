@@ -9,10 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 import com.amos.android_db.MyDBHelper;
-import com.amos.android_db.dao.Person;
 import com.amos.android_db.dao.PersonDao;
-
-import java.util.List;
 
 /**
  * Created by amosli on 14-6-17.
@@ -25,20 +22,32 @@ public class PersonProvider extends ContentProvider {
     private static final int ALL_PERSON = 1;
     private static final int PERSON = 2;
     private static final int OTHER = 3;
+    private static final int INSERT = 4;
+    private static final int DELETE = 5;
+    private static final int UPDATE = 6;
 
-    private static String tag="PersonProvider.class";
+    private MyDBHelper myDBHelper = null;
 
+    private static String tag = "PersonProvider.class";
 
-    static{
+    static {
         //1.指定一个路径的匹配规则
         //如果路径满足content://com.amos.android_db.provider.PersonProvider/persons,返回值就是(ALL_PERSON)=1
-        uriMatcher.addURI("com.amos.android_db.provider.PersonProvider","persons",ALL_PERSON);
+        uriMatcher.addURI("com.amos.android_db.provider.PersonProvider", "persons", ALL_PERSON);
 
         //2.如果路径满足content://com.amos.android_db.provider.PersonProvider/person/3,返回值就是(PERSON)=2
         //#号为通配符
-        uriMatcher.addURI("com.amos.android_db.provider.PersonProvider","person/#",PERSON);
+        uriMatcher.addURI("com.amos.android_db.provider.PersonProvider", "person/#", PERSON);
         //3.如果路径满足content://com.amos.android_db.provider.PersonProvider/other,返回值就是(OTHER)=3
-        uriMatcher.addURI("com.amos.android_db.provider.PersonProvider","other",OTHER);
+        uriMatcher.addURI("com.amos.android_db.provider.PersonProvider", "other", OTHER);
+
+        //4.插入数据,如果路径满足content://com.amos.android_db.provider.PersonProvider/insert,返回值就是(INSERT)=4
+        uriMatcher.addURI("com.amos.android_db.provider.PersonProvider", "insert", INSERT);
+        //5.删除数据,如果路径满足content://com.amos.android_db.provider.PersonProvider/delete,返回值就是(DELETE)=5
+        uriMatcher.addURI("com.amos.android_db.provider.PersonProvider", "delete", DELETE);
+        //6.更新数据,如果路径满足content://com.amos.android_db.provider.PersonProvider/update,返回值就是(UPDATE)=6
+        uriMatcher.addURI("com.amos.android_db.provider.PersonProvider", "update", UPDATE);
+
 
     }
 
@@ -50,7 +59,8 @@ public class PersonProvider extends ContentProvider {
      */
     @Override
     public boolean onCreate() {
-
+        //初始化MyDBHelper
+        myDBHelper = new MyDBHelper(this.getContext());
         return false;
     }
 
@@ -67,7 +77,7 @@ public class PersonProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         int result = uriMatcher.match(uri);
-        switch(result){
+        switch (result) {
             //如果路径满足content://com.amos.android_db.provider.PersonProvider/persons,返回值就是(ALL_PERSON)=1
             case ALL_PERSON:
                 PersonDao dao = new PersonDao(this.getContext());
@@ -77,19 +87,18 @@ public class PersonProvider extends ContentProvider {
             case PERSON:
                 long id = ContentUris.parseId(uri);
                 SQLiteDatabase database = new MyDBHelper(this.getContext()).getReadableDatabase();
-                if(database.isOpen()){
-                    database.execSQL("select * person where personid = "+id);
+                if (database.isOpen()) {
+                    database.execSQL("select * person where personid = " + id);
                     return database.query("person", null, "personid", new String[]{id + ""}, null, null, null);
                     //不要关闭数据库,否则就没有数据了.
                 }
             case OTHER:
-                Log.d(tag,"我是其他匹配规则!");
+                Log.d(tag, "我是其他匹配规则!");
                 break;
             default:
-                throw new RuntimeException("出错了!!");
+                throw new RuntimeException("无法识别该URI,出错了!!");
 
         }
-
 
 
         return null;
@@ -97,21 +106,69 @@ public class PersonProvider extends ContentProvider {
 
     @Override
     public String getType(Uri uri) {
-        return null;
+        int result = uriMatcher.match(uri);
+        switch (result){
+            case ALL_PERSON:
+                return "List<Person>";
+            case PERSON:
+                return "Person";
+            default:return null;
+        }
     }
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        return null;
+
+
+        //content://com.amos.android_db.provider.PersonProvider/insert
+        int result = uriMatcher.match(uri);
+        switch (result) {
+            case INSERT:
+                SQLiteDatabase database = myDBHelper.getWritableDatabase();
+                if (database.isOpen()) {
+                    database.insert("person", null, values);
+                }
+                return uri;
+
+            default:
+                throw new RuntimeException("无法识别该URI,出错了!!");
+        }
+
+
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+        //删除操作
+        //content://com.amos.android_db.provider.PersonProvider/delete
+        int result = uriMatcher.match(uri);
+        switch (result) {
+            case DELETE:
+                SQLiteDatabase database = myDBHelper.getWritableDatabase();
+                return database.delete("person", selection, selectionArgs);
+
+            default:
+                throw new RuntimeException("无法识别该URI,出错了!!");
+        }
+
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
+       //更新操作
+        //content://com.amos.android_db.provider.PersonProvider/update
+        int result = uriMatcher.match(uri);
+        switch (result) {
+            case UPDATE:
+                SQLiteDatabase database = myDBHelper.getWritableDatabase();
+                return database.update("person", values, selection, selectionArgs);
+
+            default:
+                throw new RuntimeException("无法识别该URI,出错了!!");
+        }
+
+
     }
+
+
 }
